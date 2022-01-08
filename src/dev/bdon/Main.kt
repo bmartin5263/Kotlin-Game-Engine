@@ -15,21 +15,43 @@ object Main {
         val scene = AnonymousScene().apply {
             onInitializeFn = {
                 val grid = TetrisGrid(20, 20, 20)
+                val grid2 = TetrisGrid(400, 20, 5)
                 register(grid)
-                register(TetrisGrid(400, 20, 5))
+                register(grid2)
 
                 grid.script {
-                    whileKeyPressed(KeyEvent.VK_DOWN, 10) {
+                    whileKeyPressed(KeyEvent.VK_DOWN, 4) {
                         moveDown()
                     }
-                    whileKeyPressed(KeyEvent.VK_UP) {
+                    whileKeyPressed(KeyEvent.VK_UP, 4) {
                         moveUp()
                     }
-                    whileKeyPressed(KeyEvent.VK_LEFT) {
+                    whileKeyPressed(KeyEvent.VK_LEFT, 4) {
                         moveLeft()
                     }
-                    whileKeyPressed(KeyEvent.VK_RIGHT) {
+                    whileKeyPressed(KeyEvent.VK_RIGHT, 4) {
                         moveRight()
+                    }
+                    onKeyPress(KeyEvent.VK_SPACE) {
+                        rotate()
+                    }
+                }
+
+                grid2.script {
+                    whileKeyPressed(KeyEvent.VK_S, 4) {
+                        moveDown()
+                    }
+                    whileKeyPressed(KeyEvent.VK_W, 4) {
+                        moveUp()
+                    }
+                    whileKeyPressed(KeyEvent.VK_A, 4) {
+                        moveLeft()
+                    }
+                    whileKeyPressed(KeyEvent.VK_D, 4) {
+                        moveRight()
+                    }
+                    onKeyPress(KeyEvent.VK_Q) {
+                        rotate()
                     }
                 }
             }

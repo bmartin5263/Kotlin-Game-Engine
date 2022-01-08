@@ -32,7 +32,6 @@ public class Java2d {
             public void keyPressed(KeyEvent e) {
                 Keyboard.INSTANCE.pressKey(e.getKeyCode());
             }
-
             @Override
             public void keyReleased(KeyEvent e) {
                 Keyboard.INSTANCE.releaseKey(e.getKeyCode());

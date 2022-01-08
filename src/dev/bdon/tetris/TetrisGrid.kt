@@ -1,28 +1,19 @@
 package com.bdon.tetris
 
 
+import dev.bdon.engine.Clock
 import dev.bdon.engine.entity.Entity
-import dev.bdon.engine.entity.script
-import dev.bdon.engine.events.Keyboard
 import dev.bdon.engine.graphics.Graphics
 import dev.bdon.engine.sprite.Box
-import dev.bdon.engine.sprite.Sprite
+import dev.bdon.tetris.TetrinoGenerator
 import java.awt.Color
-import java.awt.event.KeyEvent
 
 class TetrisGrid(
-        startX: Int,
-        startY: Int,
-        size: Int
+        posX: Int,
+        posY: Int,
+        size: Int,
+        private val blockGenerator: TetrinoGenerator = TetrinoGenerator()
 ) : Entity() {
-
-//    override fun onSpawn() {
-//        script {
-//            whileKeyPress(KeyEvent.VK_UP) {
-//
-//            }
-//        }
-//    }
 
     private fun grayCell(size: Int) = Box().apply {
         height = size
@@ -36,10 +27,12 @@ class TetrisGrid(
             grayCell(size)
         }
     }.apply {
+        val adjustedSize = size + 4
         forEachIndexed { y, row ->
+            val yValue = adjustedSize * y
             row.forEachIndexed { x, sprite ->
-                sprite.x = startX + (24 * x)
-                sprite.y = startY + (24 * y)
+                sprite.x = posX + (adjustedSize * x)
+                sprite.y = posY + yValue
             }
         }
     }
@@ -47,9 +40,11 @@ class TetrisGrid(
     val sprites: List<Box>
         get() = grid.flatMap { it.map { sprite -> sprite } }
 
-    var i = 0
-    var j = 0
+    var row = SPAWN_ROW
+    var col = SPAWN_COL
     var currentTetrino = Tetrino.L0
+    var lastDrop = 0L
+    var dropTime = 60L
 
     private var color = Color.CYAN
 
@@ -57,44 +52,87 @@ class TetrisGrid(
         grid.forEach { it.forEach { sprite -> sprite.draw(g) } }
     }
 
-    fun moveDown() {
-        remove(currentTetrino)
-        ++i
+    override fun update() {
+        if (Clock.time >= lastDrop + dropTime) {
+            moveDown()
+        }
+    }
+
+    fun spawnNewBlock() {
+        row = SPAWN_ROW
+        col = SPAWN_COL
+        currentTetrino = blockGenerator.next()
         place(currentTetrino)
+    }
+
+    fun moveDown() {
+        lastDrop = Clock.time
+        val success = attemptMove { ++row }
+        if (!success) {
+            spawnNewBlock()
+        }
     }
 
     fun moveUp() {
-        remove(currentTetrino)
-        --i
-        place(currentTetrino)
+        attemptMove { --row }
     }
 
     fun moveLeft() {
-        remove(currentTetrino)
-        --j
-        place(currentTetrino)
+        attemptMove { --col }
     }
 
     fun moveRight() {
+        attemptMove { ++col }
+    }
+
+    fun rotate() {
+        attemptMove {
+            currentTetrino = currentTetrino.rotate()
+        }
+    }
+
+    inline fun attemptMove(operations: TetrisGrid.() -> Unit): Boolean {
+        val rowSave = row
+        val colSave = col
+        val tetrinoSave = currentTetrino
+        var success = true
         remove(currentTetrino)
-        ++j
+        this.operations()
+        if (!canPlace(currentTetrino)) {
+            row = rowSave
+            col = colSave
+            currentTetrino = tetrinoSave
+            success = false
+        }
         place(currentTetrino)
+        return success
     }
 
     fun place(tetrino: Tetrino) {
         tetrino.body.forEach {
-            val y = i + it.y
-            val x = j + it.x
+            val y = row + it.y
+            val x = col + it.x
             if (y in 0..23 && x in 0..9) {
                 grid[y][x].strokeColor = tetrino.color
             }
         }
     }
 
+    fun canPlace(tetrino: Tetrino): Boolean {
+        tetrino.body.forEach {
+            val y = row + it.y
+            val x = col + it.x
+            if (y !in 0..23 || x !in 0..9 || grid[y][x].strokeColor != Color.DARK_GRAY) {
+                return false
+            }
+        }
+        return true
+    }
+
     fun remove(tetrino: Tetrino) {
         tetrino.body.forEach {
-            val y = i + it.y
-            val x = j + it.x
+            val y = row + it.y
+            val x = col + it.x
             if (y in 0..23 && x in 0..9) {
                 grid[y][x].strokeColor = Color.DARK_GRAY
             }
@@ -102,6 +140,11 @@ class TetrisGrid(
     }
 
     init {
-        place(currentTetrino)
+        spawnNewBlock()
+    }
+
+    companion object {
+        const val SPAWN_ROW = 0
+        const val SPAWN_COL = 4
     }
 }
