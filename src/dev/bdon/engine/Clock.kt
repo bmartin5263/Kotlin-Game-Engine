@@ -33,7 +33,11 @@ object Clock {
         onTick()
         val stop = System.currentTimeMillis()
         val difference = stop - start
-        println(difference)
+        if (difference < 0) {
+            println(difference)
+            println("wtf")
+            throw IllegalArgumentException()
+        }
         Thread.sleep(17 - difference)
         ++time
     }

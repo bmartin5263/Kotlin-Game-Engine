@@ -1,6 +1,7 @@
 package dev.bdon.engine.entity
 
 import dev.bdon.engine.graphics.Graphics
+import java.awt.Color
 
 abstract class Entity {
 

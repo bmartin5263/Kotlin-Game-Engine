@@ -1,13 +1,10 @@
 package dev.bdon.engine
 
-import com.bdon.tetris.TetrisGrid
 import dev.bdon.engine.entity.*
 import dev.bdon.engine.events.Keyboard
 import dev.bdon.engine.events.Timers
 import dev.bdon.engine.graphics.Java2d
 import dev.bdon.engine.scene.Scene
-import java.awt.Color
-import java.awt.event.KeyEvent
 import java.util.*
 
 object Engine {

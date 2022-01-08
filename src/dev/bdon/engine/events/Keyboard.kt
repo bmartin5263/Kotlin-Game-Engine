@@ -5,10 +5,11 @@ package dev.bdon.engine.events
 import dev.bdon.engine.entity.Entity
 import dev.bdon.engine.entity.KeyMap
 import dev.bdon.engine.scene.Scene
+import java.util.concurrent.ConcurrentHashMap
 
 object Keyboard {
 
-    private val pressed = mutableSetOf<Int>()
+    private val pressed: MutableSet<Int> = ConcurrentHashMap.newKeySet()
 //    private val observers = EnumMap<Int, List<KeyObserver>>(Int::class.java)
 
     fun isKeyPressed(code: Int): Boolean {
