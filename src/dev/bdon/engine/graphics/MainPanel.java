@@ -1,30 +1,25 @@
 package dev.bdon.engine.graphics;
 
 import dev.bdon.engine.entity.Entity;
+import dev.bdon.engine.entity.EntitySupplier;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainPanel extends JPanel {
 
-    private final List<Entity> entityList = new ArrayList<>();
+    private final EntitySupplier entityList;
 
-    @Override
-    public void paintComponent(Graphics g){
-        super.paintComponent(g);
-        Graphics2D g2 = (Graphics2D) g;
-//        g2.setColor(Color.red);
-//        g2.drawRect(0,0,100,100);
-//        g2.setColor(Color.blue);
-//        g2.fillRect(200,0,100,100);
-        for (Entity graphic : entityList) {
-            graphic.draw(g2);
-        }
+    public MainPanel(EntitySupplier entities) {
+        this.entityList = entities;
     }
 
-    public List<Entity> getEntityList() {
-        return entityList;
+    @Override
+    public void paintComponent(java.awt.Graphics g){
+        super.paintComponent(g);
+        Graphics2D g2 = (Graphics2D) g;
+        for (Entity entity : entityList.getEntities()) {
+            entity.draw(new AwtGraphics((Graphics2D) g2.create()));
+        }
     }
 }

@@ -1,8 +1,14 @@
 package dev.bdon.engine.entity
 
-import java.awt.Graphics2D
+import dev.bdon.engine.graphics.Graphics
 
 abstract class Entity {
-    open fun draw(g: Graphics2D) {}
+
+    internal var keyMap: KeyMap? = null
+    internal var timerQueue: TimerQueue? = null
+
+    open fun draw(g: Graphics) {}
     open fun update() {}
+    open fun onSpawn() {}
+    open fun onDestruction() {}
 }

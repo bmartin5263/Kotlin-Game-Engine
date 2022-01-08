@@ -1,44 +1,43 @@
 package dev.bdon.engine
 
-import dev.bdon.engine.entity.Entity
-import dev.bdon.engine.entity.toEntity
-import dev.bdon.engine.graphics.Box
+import com.bdon.tetris.TetrisGrid
+import dev.bdon.engine.entity.*
+import dev.bdon.engine.events.Keyboard
+import dev.bdon.engine.events.Timers
 import dev.bdon.engine.graphics.Java2d
+import dev.bdon.engine.scene.Scene
 import java.awt.Color
 import java.awt.event.KeyEvent
+import java.util.*
 
-class Engine {
+object Engine {
 
     private val java2d = Java2d()
-    private lateinit var entities: MutableList<Entity>
+    private val entitySupplier = EntitySupplier(emptyList())
+    private val sceneStack: Deque<Scene> = LinkedList()
 
-    fun launch() {
-        entities = java2d.initialize()
+    val currentScene get() = sceneStack.first!!
 
-        for (i in 0 until 10) {
-            entities += Box().apply {
-                x = 10 + (30 * i)
-                y = 10
-                fillColor = Color(0,0,0,0)
-            }.toEntity().onUpdate {
-                if (Keyboard.isKeyPressedImpl(KeyEvent.VK_A)) {
-                    it.y += 1
-                }
-            }
-        }
+    fun launch(scene: Scene) {
+        java2d.initialize(entitySupplier)
 
-        while (true) {
+        sceneStack.push(scene)
+        scene.onInitialize()
+
+        Clock.start {
+            entitySupplier.entities = currentScene.entities
             update()
             draw()
-            Thread.sleep(10)
         }
     }
 
-    fun update() {
-        entities.forEach { it.update() }
+    private fun update() {
+        entitySupplier.entities.forEach { it.update() }
+        Keyboard.process(currentScene)
+        Timers.process(currentScene)
     }
 
-    fun draw() {
+    private fun draw() {
         java2d.draw()
     }
 }

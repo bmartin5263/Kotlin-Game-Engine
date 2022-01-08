@@ -1,5 +1,6 @@
-package dev.bdon.engine.graphics
+package dev.bdon.engine.sprite
 
+import dev.bdon.engine.graphics.Graphics
 import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Graphics2D
@@ -12,7 +13,7 @@ class Box : Sprite() {
     var strokeColor: Color = Color.GREEN
     var strokeWidth: Float = 1.0f
 
-    override fun render(g: Graphics2D) {
+    override fun render(g: Graphics) {
         g.color = strokeColor
         g.stroke = BasicStroke(strokeWidth)
         g.drawRect(x, y, width, height)
