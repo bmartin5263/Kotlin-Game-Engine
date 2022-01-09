@@ -4,5 +4,5 @@ class AnonymousScene : Scene() {
 
     var onInitializeFn: Scene.() -> Unit = {}
 
-    override fun onInitialize() = onInitializeFn()
+    override fun initialize() = onInitializeFn()
 }

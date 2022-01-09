@@ -1,20 +1,28 @@
 package dev.bdon.engine.scene
 
 import dev.bdon.engine.entity.Entity
+import dev.bdon.engine.entity.KeyMap
 import dev.bdon.engine.entity.TimerQueue
 
 abstract class Scene {
 
-//    internal val timerQueue: TimerQueue = TimerQueue()
-//    internal val keyMap: KeyMap = KeyMap()
+    internal val timerQueue: TimerQueue = TimerQueue()
+    internal val keyMap: KeyMap = KeyMap()
     internal val entities: MutableList<Entity> = ArrayList()
 
-    fun register(entity: Entity) {
+    fun register(vararg entity: Entity) {
+        entity.forEach {
+            require(it.scene == null) { "Entities cannot be registered to two scenes" }
+            it.scene = this
+        }
         entities += entity
     }
 
-    fun deregister(entity: Entity) {
-        entities.remove(entity)
+    fun deregister(vararg entity: Entity) {
+        entity.forEach {
+            entities.remove(it)
+            it.scene = null
+        }
     }
 
     fun enter() {
@@ -25,9 +33,9 @@ abstract class Scene {
         onExit()
     }
 
-    open fun onInitialize() {}
+    open fun initialize() {}
     open fun onEnter() {}
     open fun onExit() {}
-    open fun onDestruction() {}
+    open fun destroy() {}
 
 }

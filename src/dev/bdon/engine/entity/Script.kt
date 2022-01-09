@@ -14,9 +14,9 @@ class Script<T>(private val entity: T) where T : Entity {
 
     var timers = mutableListOf<TimerConfig<T>>()
 
-    fun onKeyPress(key: Int, function: T.() -> Unit) {
-        Keyboard.onKeyPress(entity, key, function)
-    }
+//    fun onKeyPress(key: Int, function: T.() -> Unit) {
+//        Keyboard.onKeyPress(entity, key, function)
+//    }
 
 //    fun onKeyPress(keys: Set<Int>, function: T.(Int) -> Unit) {
 //        _onKeyPressAction = { keyCode ->
@@ -26,9 +26,9 @@ class Script<T>(private val entity: T) where T : Entity {
 //        }
 //    }
 
-    fun whileKeyPressed(key: Int, delay: Long = 0, function: T.() -> Unit) {
-        Keyboard.whileKeyPressed(entity, key, delay, function)
-    }
+//    fun whileKeyPressed(key: Int, delay: Long = 0, function: T.() -> Unit) {
+//        Keyboard.whileKeyPressed(entity, key, delay, function)
+//    }
 
 //    fun whileKeyPress(keys: Set<Int>, delay: Int = 0, function: T.(Int) -> Unit) {
 //

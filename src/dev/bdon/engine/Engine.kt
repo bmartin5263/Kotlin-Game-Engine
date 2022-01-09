@@ -15,14 +15,11 @@ object Engine {
 
     val currentScene get() = sceneStack.first!!
 
-    fun launch(scene: Scene) {
+    fun launch(initialScene: Scene) {
         java2d.initialize(entitySupplier)
 
-        sceneStack.push(scene)
-        scene.onInitialize()
-
+        pushScene(initialScene)
         Clock.start {
-            entitySupplier.entities = currentScene.entities
             update()
             draw()
         }
@@ -36,5 +33,11 @@ object Engine {
 
     private fun draw() {
         java2d.draw()
+    }
+
+    private fun pushScene(scene: Scene) {
+        sceneStack.push(scene)
+        entitySupplier.entities = scene.entities
+        scene.initialize()
     }
 }

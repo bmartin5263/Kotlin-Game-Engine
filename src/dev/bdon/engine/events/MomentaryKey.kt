@@ -3,7 +3,7 @@ package dev.bdon.engine.events
 import dev.bdon.engine.Clock
 import dev.bdon.engine.entity.Entity
 
-class MomentaryKey(key: Int, action: Entity.() -> Unit) : KeyListener(key, action) {
+class MomentaryKey(entity: Entity, key: Int, action: Entity.() -> Unit) : KeyListener(entity, key, action) {
 
     private var pressTime: Long = -1
 
