@@ -19,34 +19,21 @@ object Keyboard {
     }
 
     fun pressKey(code: Int) {
-        if (code !in pressed) {
-            pressed.add(code)
-        }
+        pressed.add(code)
     }
 
-    fun process(scene: Scene) {
+    fun updateKeyListeners(scene: Scene) {
+        scene.keyMap.startNewListeners()
         for (code in pressed) {
             scene.keyMap.updateListeners(code)
         }
+        scene.keyMap.removeExpiredListeners()
     }
 
-//    fun onKeyPress(key: Int, action: (Int) -> Unit) {
-//        onKeyPress(Engine.currentScene, key, action)
+//    fun deregister(keyListener: KeyListener) {
+//        val entity = keyListener.entity
+//        val keyMap = entity.scene!!.keyMap
+//        keyMap.deregister(entity)
 //    }
 
-    fun <T : Entity> onKeyPress(entity: T, scene: Scene, key: Int, action: T.() -> Unit): MomentaryKey {
-        require(entity.scene!! == scene)
-        val keyMap = entity.scene!!.keyMap
-        val listener = MomentaryKey(entity, key, action as Entity.() -> Unit)
-        keyMap.register(listener)
-        return listener
-    }
-
-    fun <T : Entity> whileKeyPressed(entity: T, scene: Scene, key: Int, delay: Long = 0L, action: T.() -> Unit): PressedKey {
-        require(entity.scene!! == scene)
-        val keyMap = entity.scene!!.keyMap
-        val listener = PressedKey(entity, key, delay, action as Entity.() -> Unit)
-        keyMap.register(listener)
-        return listener
-    }
 }

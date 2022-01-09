@@ -16,12 +16,12 @@ object Clock {
         this.paused = false
         this.onTick = onTick
         while (running) {
-            if (Keyboard.isKeyPressed(KeyEvent.VK_O)) {
-                unpause()
-            }
-            else if (Keyboard.isKeyPressed(KeyEvent.VK_P)) {
-                pause()
-            }
+//            if (Keyboard.isKeyPressed(KeyEvent.VK_O)) {
+//                unpause()
+//            }
+//            else if (Keyboard.isKeyPressed(KeyEvent.VK_P)) {
+//                pause()
+//            }
             if (!paused) {
                 tick()
             }

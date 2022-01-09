@@ -1,3 +1,3 @@
 package dev.bdon.engine.entity
 
-class EntitySupplier(var entities: List<Entity>)
+class EntitySupplier(var entities: Set<Entity>)

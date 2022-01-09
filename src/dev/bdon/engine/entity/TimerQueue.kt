@@ -5,22 +5,23 @@ import dev.bdon.engine.events.Timer
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
+import kotlin.collections.HashSet
 
 class TimerQueue {
-    private val timers: PriorityQueue<Timer> = PriorityQueue<Timer>()
-    private val entityToTimers: MutableMap<Entity, MutableList<Timer>> = HashMap()
+    private val queue: PriorityQueue<Timer> = PriorityQueue<Timer>()
+    private val entityToTimers: MutableMap<Entity, MutableSet<Timer>> = HashMap()
 
     fun add(timer: Timer) {
-        timers.add(timer)
-        entityToTimers.getOrPut(timer.entity) { ArrayList() }.add(timer)
+        queue.add(timer)
+        entityToTimers.getOrPut(timer.entity) { HashSet() }.add(timer)
     }
 
 //    fun process() {
 //        val currentTime = Clock.time
-//        while (timers.isNotEmpty()) {
-//            val next = timers.peek()
+//        while (queue.isNotEmpty()) {
+//            val next = queue.peek()
 //            if (currentTime >= next.executeAt) {
-//                timers.poll()
+//                queue.poll()
 //                next.execute()
 //            }
 //            else {
@@ -30,17 +31,22 @@ class TimerQueue {
 //    }
 
     fun remove(timer: Timer) {
-        timers.remove(timer)
+        queue.remove(timer)
         entityToTimers[timer.entity]!!.remove(timer)
     }
 
+    fun removeTimersFor(entity: Entity) {
+        val timers = entityToTimers.getOrDefault(entity, Collections.emptySet())
+        queue -= timers
+    }
+
     fun poll(): Timer {
-        val timer = timers.poll()
+        val timer = queue.poll()
         entityToTimers[timer.entity]!!.remove(timer)
         return timer
     }
 
-    fun isEmpty() = timers.isEmpty()
-    fun isNotEmpty() = timers.isNotEmpty()
-    fun peek() = timers.peek()
+    fun isEmpty() = queue.isEmpty()
+    fun isNotEmpty() = queue.isNotEmpty()
+    fun peek() = queue.peek()
 }

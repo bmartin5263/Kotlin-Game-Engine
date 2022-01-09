@@ -3,15 +3,25 @@ package dev.bdon.engine.events
 import dev.bdon.engine.entity.Entity
 
 abstract class KeyListener(
-    val entity: Entity,
+    val handle: KeyHandle,
     val key: Int,
-    val action: Entity.() -> Unit
+    val action: Action<Entity>
 ) {
+
     fun update() {
         if (test()) {
-            entity.action()
+            action()
         }
     }
 
+    fun cancel() {
+        action.target.scene?.deregisterKeyListener(this)
+    }
+
     abstract fun test(): Boolean
+    override fun toString(): String {
+        return "KeyListener(key=$key, entity=${action.target})"
+    }
+
+
 }

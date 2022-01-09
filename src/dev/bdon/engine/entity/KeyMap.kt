@@ -4,30 +4,25 @@ import dev.bdon.engine.events.KeyListener
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
+import kotlin.collections.HashSet
 
 class KeyMap {
 
     private val codeToListeners: MutableMap<Int, MutableList<KeyListener>> = HashMap()
     private val entityToListeners: MutableMap<Entity, MutableList<KeyListener>> = HashMap()
 
-    fun register(vararg keyListeners: KeyListener) {
-        keyListeners.forEach {
-            codeToListeners.getOrPut(it.key) { ArrayList() }.add(it)
-            entityToListeners
-        }
+    private val addRequests: MutableSet<KeyListener> = HashSet()
+    private val removeRequests: MutableSet<KeyListener> = HashSet()
+
+    fun addListener(listener: KeyListener) {
+        addRequests += listener
     }
 
-    fun register(keyListeners: List<KeyListener>) {
-        keyListeners.forEach {
-            codeToListeners.getOrPut(it.key) { ArrayList() }.addAll(keyListeners)
-        }
+    fun removeListener(listener: KeyListener) {
+        removeRequests += listener
     }
 
-    fun deregister(keyListener: KeyListener) {
-        codeToListeners.remove(keyListener.key)
-    }
-
-    fun deregister(entity: Entity) {
+    fun removeListenersFor(entity: Entity) {
         val listeners = entityToListeners[entity]
         if (listeners != null) {
             listeners.forEach { codeToListeners[it.key]!!.remove(it) }
@@ -37,6 +32,26 @@ class KeyMap {
 
     fun updateListeners(key: Int) {
         codeToListeners.getOrDefault(key, Collections.emptyList()).forEach { it.update() }
+    }
+
+    fun startNewListeners() {
+        addRequests.forEach { listener ->
+            println("Registering $listener")
+            codeToListeners.getOrPut(listener.key) { ArrayList() }.add(listener)
+            entityToListeners.getOrPut(listener.action.target) { ArrayList() }.add(listener)
+        }
+        addRequests.clear()
+    }
+
+    fun removeExpiredListeners() {
+        removeRequests.forEach { listener ->
+            println("Deregistering $listener")
+            val entity = listener.action.target
+            codeToListeners.remove(listener.key)
+            assert(entityToListeners[entity]!!.remove(listener))
+            listener.handle.keyListener = null
+        }
+        removeRequests.clear()
     }
 
 //    operator fun get(key: Int): MutableList<KeyListener> {
