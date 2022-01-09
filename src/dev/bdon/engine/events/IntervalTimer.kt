@@ -1,0 +1,32 @@
+package dev.bdon.engine.events
+
+import dev.bdon.engine.entity.Entity
+import dev.bdon.engine.entity.TimerQueue
+
+class IntervalTimer(
+    handle: TimerHandle,
+    internal var interval: Long,
+    action: Action1<Entity, IntervalTimer>
+): Timer(handle, action) {
+
+    var remaining: Long = interval
+    var iteration: Int = -1
+        internal set
+
+    override fun insertInto(timerQueue: TimerQueue) {
+        timerQueue.intervals.add(this)
+    }
+
+    override fun removeFrom(timerQueue: TimerQueue) {
+        timerQueue.intervals.remove(this)
+    }
+
+    fun changeInterval(value: Long) {
+        interval = value
+    }
+
+    override fun toString(): String {
+        return "Timer(interval=$interval, remaining=$remaining, iteration=$iteration, entity=${action.target})"
+    }
+
+}

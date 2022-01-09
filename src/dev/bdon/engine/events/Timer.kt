@@ -1,16 +1,23 @@
 package dev.bdon.engine.events
 
 import dev.bdon.engine.entity.Entity
+import dev.bdon.engine.entity.TimerQueue
 
-class Timer(
-    val entity: Entity,
-    val executeAt: Long,
-    private val fn: Entity.(Timer) -> Unit
-): Comparable<Timer> {
+abstract class Timer(
+    val handle: TimerHandle,
+    val action: Action1<Entity, out Timer>
+) {
 
     fun execute() {
-        entity.fn(this)
+        val casted = action as Action1<Entity, Timer>
+        casted(this)
     }
 
-    override fun compareTo(other: Timer) = this.executeAt.compareTo(other.executeAt)
+    fun cancel() {
+        action.target.scene?.cancelTimer(this)
+    }
+
+    abstract fun insertInto(timerQueue: TimerQueue)
+    abstract fun removeFrom(timerQueue: TimerQueue)
+
 }

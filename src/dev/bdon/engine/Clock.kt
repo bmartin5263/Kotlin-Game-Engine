@@ -1,7 +1,9 @@
 package dev.bdon.engine
 
 import dev.bdon.engine.events.Keyboard
+import dev.bdon.engine.events.MomentaryKey
 import java.awt.event.KeyEvent
+import kotlin.math.min
 
 object Clock {
     var time: Long = 0
@@ -38,7 +40,7 @@ object Clock {
             println("wtf")
             throw IllegalArgumentException()
         }
-        Thread.sleep(17 - difference)
+        Thread.sleep(17 - min(difference, 17))
         ++time
     }
 

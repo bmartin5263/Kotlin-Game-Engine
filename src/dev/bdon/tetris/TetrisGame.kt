@@ -13,7 +13,7 @@ class TetrisGame(
     pos: Point,
     blockSize: Int,
     random: Random,
-    private val auto: Boolean = true
+    private val auto: Boolean = false
 ) : Entity() {
 
     // Sprites

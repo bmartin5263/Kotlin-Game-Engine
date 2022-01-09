@@ -5,6 +5,7 @@ import dev.bdon.engine.entity.KeyMap
 import dev.bdon.engine.entity.TimerQueue
 import dev.bdon.engine.events.KeyListener
 import dev.bdon.engine.events.Keyboard
+import dev.bdon.engine.events.Timer
 import dev.bdon.engine.events.Timers
 
 abstract class Scene {
@@ -72,9 +73,17 @@ abstract class Scene {
         keyMap.removeListener(keyListener)
     }
 
-    open fun initialize() {}
-    open fun terminate() {}
+    fun startTimer(timer: Timer) {
+        timerQueue.add(timer)
+    }
 
+    fun cancelTimer(timer: Timer) {
+        timerQueue.remove(timer)
+    }
+
+    open fun initialize() {}
+
+    open fun terminate() {}
     open fun onEnter() {}
     open fun onExit() {}
 
