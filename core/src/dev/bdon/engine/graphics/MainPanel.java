@@ -1,5 +1,6 @@
 package dev.bdon.engine.graphics;
 
+import dev.bdon.engine.Engine;
 import dev.bdon.engine.entity.Entity;
 import dev.bdon.engine.entity.EntitySupplier;
 
@@ -8,18 +9,13 @@ import java.awt.*;
 
 public class MainPanel extends JPanel {
 
-    private final EntitySupplier entityList;
-
-    public MainPanel(EntitySupplier entities) {
-        this.entityList = entities;
-    }
-
     @Override
     public void paintComponent(java.awt.Graphics g){
         super.paintComponent(g);
-        Graphics2D g2 = (Graphics2D) g;
-        for (Entity entity : entityList.getEntities()) {
-            entity.draw(new AwtGraphics((Graphics2D) g2.create()));
+        for (Entity entity : Engine.INSTANCE.entities()) {
+            Graphics2D g2 = (Graphics2D) g.create();
+            entity.draw(new AwtGraphics(g2));
+            g2.dispose();
         }
     }
 }

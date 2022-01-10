@@ -1,5 +1,7 @@
 package dev.bdon.engine.util
 
+import java.util.function.Consumer
+
 class CyclicIterator<T>(private val array: Array<T>) : ListIterator<T> {
 
     init {
@@ -10,15 +12,11 @@ class CyclicIterator<T>(private val array: Array<T>) : ListIterator<T> {
 
     override fun next(): T {
         index = nextIndex()
-        println(index)
-        println(array[index])
         return array[index]
     }
 
     override fun previous(): T {
         index = previousIndex()
-        println(index)
-        println(array[index])
         return array[index]
     }
 

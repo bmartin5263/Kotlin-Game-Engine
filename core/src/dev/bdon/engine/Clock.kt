@@ -2,28 +2,24 @@ package dev.bdon.engine
 
 import dev.bdon.engine.events.Keyboard
 import dev.bdon.engine.events.MomentaryKey
+import dev.bdon.engine.graphics.Java2d
+import dev.bdon.engine.util.StopWatch
 import java.awt.event.KeyEvent
 import kotlin.math.min
 
 object Clock {
     var time: Long = 0
 
-    private var running: Boolean = false
+    internal var running: Boolean = false
     private var paused: Boolean = false
     private var onTick: () -> Unit = {}
 
     fun start(onTick: () -> Unit) {
         this.time = 0
-        this.running = true
         this.paused = false
         this.onTick = onTick
-        while (running) {
-//            if (Keyboard.isKeyPressed(KeyEvent.VK_O)) {
-//                unpause()
-//            }
-//            else if (Keyboard.isKeyPressed(KeyEvent.VK_P)) {
-//                pause()
-//            }
+        this.running = true
+        while (!Java2d.closed && running) {
             if (!paused) {
                 tick()
             }
@@ -31,16 +27,8 @@ object Clock {
     }
 
     private fun tick() {
-        val start = System.currentTimeMillis()
-        onTick()
-        val stop = System.currentTimeMillis()
-        val difference = stop - start
-        if (difference < 0) {
-            println(difference)
-            println("wtf")
-            throw IllegalArgumentException()
-        }
-        Thread.sleep(17 - min(difference, 17))
+        val ms = StopWatch().time("Tick") { onTick() }
+        Thread.sleep(17 - min(ms, 17))
         ++time
     }
 
@@ -53,7 +41,6 @@ object Clock {
     }
 
     fun togglePause() {
-        println("toggle")
         paused = !paused;
     }
 }

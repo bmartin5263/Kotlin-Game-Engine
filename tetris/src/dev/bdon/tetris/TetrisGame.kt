@@ -5,6 +5,7 @@ import com.bdon.tetris.Tetrino
 import dev.bdon.engine.Clock
 import dev.bdon.engine.Point
 import dev.bdon.engine.entity.Entity
+import dev.bdon.engine.entity.interval
 import dev.bdon.engine.graphics.Graphics
 import kotlin.random.Random
 
@@ -29,6 +30,12 @@ class TetrisGame(
     private var currentTetrino: Tetrino = Tetrinos.L0
     private var lastDrop: Long = 0L
     private var dropTime: Long = 10L
+
+    override fun initialize() {
+        interval(60) {
+            moveDown()
+        }
+    }
 
     override fun draw(g: Graphics) {
         ui.draw(g)

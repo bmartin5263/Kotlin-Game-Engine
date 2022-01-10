@@ -10,6 +10,8 @@ class IntervalTimer(
 ): Timer(handle, action) {
 
     var remaining: Long = interval
+        internal set
+
     var iteration: Int = -1
         internal set
 
@@ -23,6 +25,10 @@ class IntervalTimer(
 
     fun changeInterval(value: Long) {
         interval = value
+    }
+
+    fun reset() {
+        remaining = interval
     }
 
     override fun toString(): String {

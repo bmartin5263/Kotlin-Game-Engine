@@ -18,7 +18,7 @@ abstract class Entity {
     open fun terminate() {}
 
     fun markForDestruction() {
-        scene!!.destroy(this)
+        scene!!.markForDestruction(this)
     }
 
     internal fun registerToScene(scene: Scene) {
@@ -47,7 +47,7 @@ fun <T : Entity> T.timeout(frames: Long, method: T.(Timer) -> Unit): TimerHandle
     val handle = TimerHandle()
     val command = object : RegisterCommand {
         override fun execute(scene: Scene) {
-            if (!handle.cancelled) {
+            if (!handle.isCancelled) {
                 require(scene == this@timeout.scene)
                 val action = Action1(this@timeout, method)
                 val timer = TimeoutTimer(handle, Clock.time + frames, action as Action1<Entity, TimeoutTimer>)
@@ -60,14 +60,14 @@ fun <T : Entity> T.timeout(frames: Long, method: T.(Timer) -> Unit): TimerHandle
     return handle
 }
 
-fun <T : Entity> T.interval(frames: Long, callImmediately: Boolean = false, method: T.(IntervalTimer) -> Unit): TimerHandle {
-    val handle = TimerHandle()
+fun <T : Entity> T.interval(frames: Long, callImmediately: Boolean = false, method: T.(IntervalTimer) -> Unit): IntervalTimerHandle {
+    val handle = IntervalTimerHandle()
     val command = object : RegisterCommand {
         override fun execute(scene: Scene) {
-            if (!handle.cancelled) {
+            if (!handle.isCancelled) {
                 require(scene == this@interval.scene)
                 val action = Action1(this@interval, method)
-                val timer = IntervalTimer(handle, Clock.time + frames, action as Action1<Entity, IntervalTimer>)
+                val timer = IntervalTimer(handle, frames, action as Action1<Entity, IntervalTimer>)
                 if (callImmediately) {
                     timer.remaining = 0
                 }

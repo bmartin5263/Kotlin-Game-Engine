@@ -1,5 +1,6 @@
 package dev.bdon.engine.scene
 
+import dev.bdon.engine.Engine
 import dev.bdon.engine.entity.Entity
 import dev.bdon.engine.entity.KeyMap
 import dev.bdon.engine.entity.TimerQueue
@@ -17,25 +18,54 @@ abstract class Scene {
     private val spawnRequests: MutableSet<Entity> = HashSet()
     private val destroyRequests: MutableSet<Entity> = HashSet()
 
-    fun spawn(vararg entities: Entity) {
-        entities.forEach {
-            if (it !in liveEntities) spawnRequests += it
+    open fun initialize() {}
+    open fun terminate() {}
+    open fun onEnter() {}
+    open fun onExit() {}
+
+    fun open() {
+        Engine.requestSceneChange(this)
+    }
+
+    fun close() {
+        Engine.requestSceneRemoval(this)
+    }
+
+    fun spawn(entity: Entity) {
+        if (entity !in liveEntities) {
+            spawnRequests += entity
         }
     }
 
-    fun destroy(entity: Entity) {
+    fun spawn(vararg entities: Entity) {
+        entities.forEach { spawn(it) }
+    }
+
+    fun markForDestruction(entity: Entity) {
         if (entity in liveEntities) destroyRequests += entity
     }
 
-
-    fun nextFrame() {
+    internal fun nextFrame() {
         spawnNewEntities()
 
         liveEntities.forEach { it.update() }
-        Keyboard.updateKeyListeners(this)
+        processInputEvents()
         Timers.process(this)
 
         destroyExpiredEntities()
+    }
+
+    private fun processInputEvents() {
+        Keyboard.recordKeys()
+        updateKeyListeners()
+    }
+
+    private fun updateKeyListeners() {
+        keyMap.startNewListeners()
+        for (code in Keyboard.pressed) {
+            keyMap.updateListeners(code)
+        }
+        keyMap.removeExpiredListeners()
     }
 
     private fun spawnNewEntities() {
@@ -65,26 +95,20 @@ abstract class Scene {
         entity.deregisterFromScene()
     }
 
-    fun registerKeyListener(keyListener: KeyListener) {
+    internal fun registerKeyListener(keyListener: KeyListener) {
         keyMap.addListener(keyListener)
     }
 
-    fun deregisterKeyListener(keyListener: KeyListener) {
+    internal fun deregisterKeyListener(keyListener: KeyListener) {
         keyMap.removeListener(keyListener)
     }
 
-    fun startTimer(timer: Timer) {
+    internal fun startTimer(timer: Timer) {
         timerQueue.add(timer)
     }
 
-    fun cancelTimer(timer: Timer) {
+    internal fun cancelTimer(timer: Timer) {
         timerQueue.remove(timer)
     }
-
-    open fun initialize() {}
-
-    open fun terminate() {}
-    open fun onEnter() {}
-    open fun onExit() {}
 
 }

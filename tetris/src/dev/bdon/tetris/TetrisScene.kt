@@ -30,18 +30,16 @@ class TetrisScene : Scene() {
     override fun initialize() {
         spawn(gameController, mainGame, game1, game2, game3, game4, game5, game6, game7, game8)
         gameController.game = gamesIterator.next()
+
         gameController.onKeyPress(KeyEvent.VK_O) {
-            println("O")
             game = gamesIterator.previous()
         }
         gameController.onKeyPress(KeyEvent.VK_P) {
-            println("P")
             game = gamesIterator.next()
         }
-
-        mainGame.interval(20) {
-            moveDown()
-            it.interval += 2
+        gameController.onKeyPress(KeyEvent.VK_X) {
+            println("Close X")
+            close()
         }
     }
 }

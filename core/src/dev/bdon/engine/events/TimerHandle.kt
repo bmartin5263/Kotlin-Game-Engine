@@ -1,8 +1,8 @@
 package dev.bdon.engine.events
 
-class TimerHandle {
+open class TimerHandle {
 
-    internal var cancelled: Boolean = false
+    internal var isCancelled: Boolean = false
     var timer: Timer? = null
 
     internal fun link(timer: Timer) {
@@ -14,8 +14,8 @@ class TimerHandle {
     }
 
     fun cancel() {
-        if (!cancelled) {
-            cancelled = true
+        if (!isCancelled) {
+            isCancelled = true
             if (timer != null) {
                 timer!!.cancel()
             }

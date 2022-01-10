@@ -24,17 +24,12 @@ class TetrisGameUI(
 //        fillColor = Color(0,0,0,0)
 //        strokeColor = Color.WHITE
 //    }
-    val box: Box = Box().apply {
-        width = 20
-        height = 20
-    }
 
     fun draw(g: Graphics) {
         boxGrid.draw(g)
         nextGrid.draw(g)
         afterGrid.draw(g)
 //        border.draw(g)
-        box.draw(g)
     }
 
     fun updateNextAndAfter(next: Tetrino, after: Tetrino) {
