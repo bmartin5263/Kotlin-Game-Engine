@@ -11,7 +11,7 @@ object Tetrinos {
     }
 
     private fun point(x: Int, y: Int) = Point(x, y)
-    private val FUCHSIA = Color(255, 0, 255)
+    private val FUCHSIA = Color(153, 0, 255)
 
     val L0 = Tetrino(Color.ORANGE, arrayOf(point(0,0), point(0,-1), point(0,-2), point(1,-2)))
     val L1 = Tetrino(Color.ORANGE, arrayOf(point(0,0), point(0,-1), point(1,0), point(2,0)))

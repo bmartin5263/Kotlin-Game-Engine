@@ -23,7 +23,7 @@ public class Java2d {
         panel = new MainPanel();
         panel.setBackground(Color.BLACK);
         contentPane.add(panel);
-        frame.setSize(1280,720);
+        frame.setSize(960,540);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.addWindowListener(new WindowListener() {

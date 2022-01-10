@@ -6,6 +6,8 @@ import dev.bdon.engine.Clock
 import dev.bdon.engine.Point
 import dev.bdon.engine.entity.Entity
 import dev.bdon.engine.entity.interval
+import dev.bdon.engine.events.IntervalTimerHandle
+import dev.bdon.engine.events.TimerHandle
 import dev.bdon.engine.graphics.Graphics
 import kotlin.random.Random
 
@@ -27,10 +29,11 @@ class TetrisGame(
     private var row: Int = spawnRow
     private var col: Int = spawnCol
     private var currentTetrino: Tetrino = Tetrinos.L0
+    private var dropHandle: IntervalTimerHandle? = null
 
     override fun initialize() {
         println("TetrisGame::initialize()")
-        interval(60) {
+        dropHandle = interval(60) {
             moveDown()
         }
     }
@@ -52,6 +55,7 @@ class TetrisGame(
     }
 
     fun moveDown() {
+        dropHandle?.reset()
         val success = attemptMove { --row }
         if (!success) {
             gameBoard.clearRows(currentTetrino, Point(col, row))
