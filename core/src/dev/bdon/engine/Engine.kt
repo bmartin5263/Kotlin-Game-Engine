@@ -50,20 +50,30 @@ object Engine {
     }
 
     private fun doSceneRemovalRequests() {
-        while (sceneRemovalQueue.isNotEmpty()) {
-            val sceneToRemove = sceneRemovalQueue.poll()!!
-            if (sceneToRemove === currentScene) {
-                currentScene.onExit()
-                currentScene.terminate()
-                sceneStack.pop()
+        if (sceneRemovalQueue.isNotEmpty()) {
+            while (sceneRemovalQueue.isNotEmpty()) {
+                val sceneToRemove = sceneRemovalQueue.poll()!!
+                if (sceneToRemove === currentScene) {
+                    currentScene.onExit()
+                    currentScene.terminate()
+                    sceneStack.pop()
+                }
+                else if (sceneToRemove in sceneStack) {
+                    sceneToRemove.terminate()
+                    sceneStack.remove(sceneToRemove)
+                }
             }
-            else if (sceneToRemove in sceneStack) {
-                sceneToRemove.terminate()
-                sceneStack.remove(sceneToRemove)
+            if (sceneStack.size <= 1) {
+                Clock.running = false
             }
-        }
-        if (sceneStack.size <= 1) {
-            Clock.running = false
+            else {
+                val delta = currentScene.frameDelta()
+                if (delta > 1) {
+                    println("FAST FORWARD")
+                    currentScene.fastForward(delta)
+                }
+                currentScene.onEnter()
+            }
         }
     }
 

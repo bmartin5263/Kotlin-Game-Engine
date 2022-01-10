@@ -1,6 +1,8 @@
 package dev.bdon.engine.entity
 
+import dev.bdon.engine.Clock
 import dev.bdon.engine.events.KeyListener
+import dev.bdon.engine.events.MomentaryKey
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -34,9 +36,19 @@ class KeyMap {
         codeToListeners.getOrDefault(key, Collections.emptyList()).forEach { it.update() }
     }
 
+    fun fastForwardMomentaryKeys() {
+        codeToListeners.values.forEach { list ->
+            list.forEach { listener ->
+                if (listener is MomentaryKey) {
+                    listener.pressTime = Clock.time
+                }
+            }
+        }
+    }
+
     fun startNewListeners() {
         addRequests.forEach { listener ->
-            println("Registering $listener")
+//            println("Registering $listener")
             codeToListeners.getOrPut(listener.key) { ArrayList() }.add(listener)
             entityToListeners.getOrPut(listener.action.target) { ArrayList() }.add(listener)
         }
@@ -45,7 +57,7 @@ class KeyMap {
 
     fun removeExpiredListeners() {
         removeRequests.forEach { listener ->
-            println("Deregistering $listener")
+//            println("Deregistering $listener")
             val entity = listener.action.target
             codeToListeners.remove(listener.key)
             assert(entityToListeners[entity]!!.remove(listener))

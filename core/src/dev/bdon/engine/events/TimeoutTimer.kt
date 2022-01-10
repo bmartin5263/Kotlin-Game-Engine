@@ -5,7 +5,7 @@ import dev.bdon.engine.entity.TimerQueue
 
 class TimeoutTimer(
     handle: TimerHandle,
-    val executeAt: Long,
+    var executeAt: Long,
     action: Action1<Entity, TimeoutTimer>
 ): Timer(handle, action), Comparable<TimeoutTimer> {
 
@@ -19,7 +19,7 @@ class TimeoutTimer(
     }
 
     override fun toString(): String {
-        return "Timer(executeAt=$executeAt, entity=${action.target})"
+        return "TimeoutTimer(executeAt=$executeAt, entity=${action.target})"
     }
 
 }

@@ -1,5 +1,6 @@
 package dev.bdon.tetris
 
+import dev.bdon.engine.Clock
 import dev.bdon.engine.entity.onKeyPress
 import dev.bdon.engine.entity.toEntity
 import dev.bdon.engine.entity.whileKeyPressed
@@ -11,6 +12,7 @@ import java.awt.event.KeyEvent
 class TestScene : Scene() {
 
     override fun initialize() {
+        println("${Clock.time} : TestScene::initialize()")
         val label = Label().apply {
             text = "Press Space"
             x = 100
@@ -34,4 +36,15 @@ class TestScene : Scene() {
         spawn(label)
     }
 
+    override fun terminate() {
+        println("${Clock.time} : TestScene::terminate()")
+    }
+
+    override fun onEnter() {
+        println("${Clock.time} : TestScene::onEnter()")
+    }
+
+    override fun onExit() {
+        println("${Clock.time} : TestScene::onExit()")
+    }
 }

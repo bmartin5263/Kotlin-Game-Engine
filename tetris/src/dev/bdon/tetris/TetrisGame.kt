@@ -14,7 +14,6 @@ class TetrisGame(
     pos: Point,
     blockSize: Int,
     random: Random,
-    private val auto: Boolean = false
 ) : Entity() {
 
     // Sprites
@@ -28,25 +27,20 @@ class TetrisGame(
     private var row: Int = spawnRow
     private var col: Int = spawnCol
     private var currentTetrino: Tetrino = Tetrinos.L0
-    private var lastDrop: Long = 0L
-    private var dropTime: Long = 10L
 
     override fun initialize() {
+        println("TetrisGame::initialize()")
         interval(60) {
             moveDown()
         }
     }
 
-    override fun draw(g: Graphics) {
-        ui.draw(g)
+    override fun terminate() {
+        println("TetrisGame::terminate()")
     }
 
-    override fun update() {
-        if (auto) {
-            if (Clock.time >= lastDrop + dropTime) {
-                moveDown()
-            }
-        }
+    override fun draw(g: Graphics) {
+        ui.draw(g)
     }
 
     private fun spawnNextBlock() {
@@ -58,7 +52,6 @@ class TetrisGame(
     }
 
     fun moveDown() {
-        lastDrop = Clock.time
         val success = attemptMove { --row }
         if (!success) {
             gameBoard.clearRows(currentTetrino, Point(col, row))

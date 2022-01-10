@@ -1,5 +1,6 @@
 package dev.bdon.engine.scene
 
+import dev.bdon.engine.Clock
 import dev.bdon.engine.Engine
 import dev.bdon.engine.entity.Entity
 import dev.bdon.engine.entity.KeyMap
@@ -17,6 +18,8 @@ abstract class Scene {
 
     private val spawnRequests: MutableSet<Entity> = HashSet()
     private val destroyRequests: MutableSet<Entity> = HashSet()
+
+    internal var lastFrameProcessed: Long = -1L
 
     open fun initialize() {}
     open fun terminate() {}
@@ -45,6 +48,10 @@ abstract class Scene {
         if (entity in liveEntities) destroyRequests += entity
     }
 
+    internal fun frameDelta(): Long {
+        return Clock.time - lastFrameProcessed
+    }
+
     internal fun nextFrame() {
         spawnNewEntities()
 
@@ -53,6 +60,12 @@ abstract class Scene {
         Timers.process(this)
 
         destroyExpiredEntities()
+        lastFrameProcessed = Clock.time
+    }
+
+    internal fun fastForward(frames: Long) {
+        keyMap.fastForwardMomentaryKeys()
+        timerQueue.fastForwardTimeouts(frames)
     }
 
     private fun processInputEvents() {

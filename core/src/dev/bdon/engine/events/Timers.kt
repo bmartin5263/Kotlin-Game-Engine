@@ -9,6 +9,7 @@ object Timers {
     internal fun process(scene: Scene) {
         val currentTime = Clock.time
         val timerQueue = scene.timerQueue
+
         timerQueue.startNewTimers()
         while (timerQueue.isNotEmpty()) {
             val next = timerQueue.peek()

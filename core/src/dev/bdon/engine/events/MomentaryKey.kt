@@ -9,13 +9,17 @@ class MomentaryKey(
     action: Action<Entity>
 ) : KeyListener(handle, key, action) {
 
-    private var pressTime: Long = -1
+    internal var pressTime: Long = Clock.time - 1
 
     override fun test(): Boolean {
+//        val x = Clock.time == pressTime + 1
+//        println("Clock.time == pressTime + 1 == $x")
         return if (Clock.time == pressTime + 1) {
             ++pressTime
             false
         } else {
+            println("Old Press Time: $pressTime")
+            println("Clock.time: ${Clock.time}")
             pressTime = Clock.time
             true
         }

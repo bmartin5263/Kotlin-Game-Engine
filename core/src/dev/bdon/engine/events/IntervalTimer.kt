@@ -32,7 +32,7 @@ class IntervalTimer(
     }
 
     override fun toString(): String {
-        return "Timer(interval=$interval, remaining=$remaining, iteration=$iteration, entity=${action.target})"
+        return "IntervalTimer(interval=$interval, remaining=$remaining, iteration=$iteration, entity=${action.target})"
     }
 
 }

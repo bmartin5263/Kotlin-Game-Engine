@@ -17,7 +17,6 @@ class TimerQueue {
     internal val intervals: MutableList<IntervalTimer> = ArrayList()
 
     private val entityToTimers: MutableMap<Entity, MutableSet<Timer>> = HashMap()
-
     private val addRequests: MutableSet<Timer> = HashSet()
     private val removeRequests: MutableSet<Timer> = HashSet()
 
@@ -42,7 +41,7 @@ class TimerQueue {
 
     fun startNewTimers() {
         addRequests.forEach { timer ->
-            println("Starting $timer")
+//            println("Starting $timer")
             timer.insertInto(this)
             entityToTimers.getOrPut(timer.action.target) { HashSet() }.add(timer)
         }
@@ -51,11 +50,15 @@ class TimerQueue {
 
     fun removeCancelledTimers() {
         removeRequests.forEach { timer ->
-            println("Removing $timer")
+//            println("Removing $timer")
             timer.removeFrom(this)
             entityToTimers[timer.action.target]!!.remove(timer)
         }
         removeRequests.clear()
+    }
+
+    fun fastForwardTimeouts(amount: Long) {
+        queue.forEach { it.executeAt += amount }
     }
 
     fun isEmpty() = queue.isEmpty()

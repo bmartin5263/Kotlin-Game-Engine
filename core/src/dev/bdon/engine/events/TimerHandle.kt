@@ -3,7 +3,7 @@ package dev.bdon.engine.events
 open class TimerHandle {
 
     internal var isCancelled: Boolean = false
-    var timer: Timer? = null
+    internal var timer: Timer? = null
 
     internal fun link(timer: Timer) {
         this.timer = timer

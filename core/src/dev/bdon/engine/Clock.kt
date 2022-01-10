@@ -9,6 +9,7 @@ import kotlin.math.min
 
 object Clock {
     var time: Long = 0
+        internal set
 
     internal var running: Boolean = false
     private var paused: Boolean = false
