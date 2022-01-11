@@ -22,7 +22,7 @@ class TetrisGame(
     private val blockGenerator: TetrinoGenerator = TetrinoGenerator(random)
 
     private val gameBoard: GameBoard = GameBoard(dimensions)
-    private val ui: TetrisGameUI = TetrisGameUI(dimensions, pos, blockSize)
+    val ui: TetrisGameUI = TetrisGameUI(dimensions, pos, blockSize)
 
     private val spawnCol = dimensions.col / 2 - 1
     private val spawnRow = dimensions.row - 1

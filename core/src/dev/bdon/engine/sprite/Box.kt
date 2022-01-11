@@ -3,9 +3,8 @@ package dev.bdon.engine.sprite
 import dev.bdon.engine.graphics.Graphics
 import java.awt.BasicStroke
 import java.awt.Color
-import java.awt.Graphics2D
 
-class Box : Sprite() {
+class Box : AbstractSprite() {
 
     var width: Int = 20
     var height: Int = 20

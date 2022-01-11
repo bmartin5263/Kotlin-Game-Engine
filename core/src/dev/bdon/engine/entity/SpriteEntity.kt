@@ -1,10 +1,9 @@
 package dev.bdon.engine.entity
 
 import dev.bdon.engine.graphics.Graphics
-import dev.bdon.engine.sprite.Sprite
-import java.awt.Graphics2D
+import dev.bdon.engine.sprite.AbstractSprite
 
-class SpriteEntity<S : Sprite>(var sprite: S) : Entity() {
+class SpriteEntity<S : AbstractSprite>(var sprite: S) : Entity() {
 
     private var updateFn: (S) -> Unit = {}
 
@@ -22,4 +21,4 @@ class SpriteEntity<S : Sprite>(var sprite: S) : Entity() {
     }
 }
 
-fun <S : Sprite> S.toEntity(): SpriteEntity<S> = SpriteEntity(this)
+fun <S : AbstractSprite> S.toEntity(): SpriteEntity<S> = SpriteEntity(this)

@@ -4,7 +4,7 @@ import dev.bdon.engine.graphics.Graphics
 import java.awt.Color
 import java.awt.Font
 
-class Label : Sprite() {
+class Label : AbstractSprite() {
 
     var text: String = "Hello, World!"
     var color: Color = Color.GREEN

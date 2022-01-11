@@ -5,6 +5,7 @@ import dev.bdon.engine.Point
 import dev.bdon.engine.graphics.Graphics
 import dev.bdon.engine.sprite.Box
 import dev.bdon.engine.sprite.Label
+import dev.bdon.engine.sprite.SpriteGroup
 import java.awt.Color
 import java.awt.Font
 import java.util.*
@@ -16,18 +17,7 @@ class BoxGrid(
     pos: Point,
     val dimensions: Dimensions,
     val boxSize: Int
-) {
-
-//    val grid: Array<Array<Box>> = Array(dimensions.row) { Array(dimensions.col) { grayBox(boxSize) } }.apply {
-//        val adjustedSize = boxSize + PADDING
-//        forEachIndexed { y, row ->
-//            val yValue = adjustedSize * y
-//            row.forEachIndexed { x, sprite ->
-//                sprite.x = pos.x + (adjustedSize * x)
-//                sprite.y = pos.y + yValue
-//            }
-//        }
-//    }
+): SpriteGroup() {
 
     val grid: MutableList<Array<Box>> = ArrayList<Array<Box>>().apply {
         for (y in 0 until dimensions.row) {
@@ -42,20 +32,7 @@ class BoxGrid(
         }
     }
 
-//
-//        Array(dimensions.row) { Array(dimensions.col) { grayBox(boxSize) } }.apply {
-//        val adjustedSize = boxSize + PADDING
-//        forEachIndexed { y, row ->
-//            val yValue = adjustedSize * y
-//            row.forEachIndexed { x, sprite ->
-//                sprite.x = pos.x + (adjustedSize * x)
-//                sprite.y = pos.y + yValue
-//            }
-//        }
-//    }
-
-    val boxes: List<Box>
-        get() = grid.flatMap { it.map { sprite -> sprite } }
+    val boxes: List<Box> = grid.flatMap { it.map { sprite -> sprite } }
 
     val topLeftCorner: Point
         get() = grid[dimensions.row - 1][0].position
@@ -94,14 +71,8 @@ class BoxGrid(
         font = Font("Arial", 0, max(10, (boxSize * .75).toInt()))
     }
 
-    fun move(x: Int, y: Int) {
-        boxes.forEach { it.move(x, y) }
-    }
+    override val sprites = boxes.plus(label)
 
-    fun draw(g: Graphics) {
-        boxes.forEach { it.draw(g) }
-        label.draw(g)
-    }
 
 //    fun setColor(pos: Point, color: Color) {
 //        grid[pos.x][pos.y].strokeColor = color
@@ -125,7 +96,7 @@ class BoxGrid(
     }
 
     fun clear() {
-        boxes.forEach { it.strokeColor = GameBoard.UNOCCUPIED }
+        this.boxes.forEach { it.strokeColor = GameBoard.UNOCCUPIED }
     }
 
     fun placeTopCenter(tetrino: Tetrino) {

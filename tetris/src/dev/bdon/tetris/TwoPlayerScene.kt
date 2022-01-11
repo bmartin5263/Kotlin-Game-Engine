@@ -5,6 +5,7 @@ import dev.bdon.engine.Point
 import dev.bdon.engine.entity.interval
 import dev.bdon.engine.entity.onKeyPress
 import dev.bdon.engine.entity.timeout
+import dev.bdon.engine.entity.whileKeyPressed
 import dev.bdon.engine.scene.Scene
 import dev.bdon.engine.util.cycleIterator
 import java.awt.event.KeyEvent
@@ -23,6 +24,19 @@ class TwoPlayerScene : GameplayScene() {
         gameController.onKeyPress(KeyEvent.VK_X) {
             println("Close X")
             close()
+        }
+
+        mainGame.whileKeyPressed(KeyEvent.VK_D) {
+            ui.move(2, 0)
+        }
+        mainGame.whileKeyPressed(KeyEvent.VK_S) {
+            ui.move(0, 2)
+        }
+        mainGame.whileKeyPressed(KeyEvent.VK_A) {
+            ui.move(-2, 0)
+        }
+        mainGame.whileKeyPressed(KeyEvent.VK_W) {
+            ui.move(0, -2)
         }
     }
 
