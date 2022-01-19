@@ -29,3 +29,13 @@ fun createId(index: Int = 0, generation: UInt = 1u): Id {
 fun emptyId(): Id {
     return 0uL
 }
+
+typealias EntityId = Id
+
+fun <T> EntityId.get(): T {
+    throw IllegalStateException()
+}
+
+fun <T> EntityId.register(): T {
+    throw IllegalStateException()
+}

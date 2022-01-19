@@ -2,9 +2,11 @@ package dev.bdon.engine.scene
 
 import dev.bdon.engine.Clock
 import dev.bdon.engine.Engine
-import dev.bdon.engine.ecs.EntityRegistry
+import dev.bdon.engine.ecs.ECS
+import dev.bdon.engine.ecs.EntityId
 import dev.bdon.engine.ecs.Id
 import dev.bdon.engine.entity.Entity
+import dev.bdon.engine.entity.EntityBuilder
 import dev.bdon.engine.entity.KeyMap
 import dev.bdon.engine.entity.TimerQueue
 import dev.bdon.engine.events.KeyListener
@@ -17,9 +19,9 @@ abstract class Scene {
     internal val timerQueue: TimerQueue = TimerQueue()
     internal val keyMap: KeyMap = KeyMap()
 
-    internal val entityRegistry: EntityRegistry = EntityRegistry()
+    internal val ecs: ECS = ECS()
     internal val liveEntities: Iterator<Entity>
-        get() = entityRegistry.arr.iterator()
+        get() = ecs.entities.iterator()
 
 //    internal val liveEntities: MutableSet<Entity> = HashSet()
 
@@ -38,8 +40,12 @@ abstract class Scene {
         Engine.requestSceneRemoval(this)
     }
 
-    fun spawn(entity: Entity) {
-        entityRegistry.register(entity)
+    fun spawn(entity: Entity): Id {
+        return ecs.register(entity)
+    }
+
+    fun spawn(entityBuilder: EntityBuilder): EntityId {
+        throw NotImplementedError()
     }
 
     fun spawn(vararg entities: Entity) {
@@ -51,7 +57,7 @@ abstract class Scene {
     }
 
     fun markForDestruction(id: Id) {
-        entityRegistry.deregister(id)
+        ecs.deregister(id)
     }
 
     internal fun frameDelta(): Long {
@@ -59,11 +65,11 @@ abstract class Scene {
     }
 
     internal fun nextFrame() {
-        entityRegistry.destroyEntities()
-        entityRegistry.spawnEntities()
-        println(entityRegistry.size)
+        ecs.destroyEntities()
+        ecs.spawnEntities()
+        println(ecs.size)
 
-        entityRegistry.update()
+        ecs.update()
         processInputEvents()
         Timers.process(this)
 

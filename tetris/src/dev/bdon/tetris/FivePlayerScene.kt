@@ -12,11 +12,11 @@ import kotlin.random.Random
 
 class FivePlayerScene : GameplayScene() {
 
-    private val mainGame = TetrisGame(Constants.DEFAULT_DIM, Point(20, 30), 14, Random(seed))
-    private val game1 = TetrisGame(Constants.DEFAULT_DIM, Point(600, 30), 5, Random(seed))
-    private val game2 = TetrisGame(Constants.DEFAULT_DIM, Point(800, 30), 5, Random(seed))
-    private val game5 = TetrisGame(Constants.DEFAULT_DIM, Point(600, 270), 5, Random(seed))
-    private val game6 = TetrisGame(Constants.DEFAULT_DIM, Point(800, 270), 5, Random(seed))
+    private val mainGame = TetrisGame(Constants.DEFAULT_DIM, Point(20f, 30f), 14, Random(seed))
+    private val game1 = TetrisGame(Constants.DEFAULT_DIM, Point(600f, 30f), 5, Random(seed))
+    private val game2 = TetrisGame(Constants.DEFAULT_DIM, Point(800f, 30f), 5, Random(seed))
+    private val game5 = TetrisGame(Constants.DEFAULT_DIM, Point(600f, 270f), 5, Random(seed))
+    private val game6 = TetrisGame(Constants.DEFAULT_DIM, Point(800f, 270f), 5, Random(seed))
 
 //    private val gamesIterator = arrayOf(mainGame, /*game1, game2, game3, game4, game5, game6, game7, game8 */).cycleIterator()
 

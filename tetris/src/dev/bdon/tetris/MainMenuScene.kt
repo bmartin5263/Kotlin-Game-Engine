@@ -15,13 +15,13 @@ class MainMenuScene : Scene() {
         println("${Clock.time} : MainMenuScene::initialize()")
         val label = Label().apply {
             text = "Press '2' for Two Player Scene, Press '5' for Five Player Scene"
-            x = 100
-            y = 100
+            x = 100f
+            y = 100f
             font = Font("Arial", Font.PLAIN, 30)
         }.toEntity()
 
         label.whileKeyPressed(KeyEvent.VK_RIGHT) {
-            sprite.move(20, 0)
+            sprite.move(20f, 0f)
         }
 
         label.onKeyPress(KeyEvent.VK_2) {

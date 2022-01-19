@@ -1,6 +1,6 @@
 package dev.bdon.engine
 
-data class Point(val x: Int, val y: Int) {
+data class Point(val x: Float, val y: Float) {
 
     operator fun plus(point: Point): Point {
         return Point(x + point.x, y + point.y)

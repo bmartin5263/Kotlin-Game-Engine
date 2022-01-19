@@ -2,12 +2,11 @@ package dev.bdon.engine.sprite
 
 import dev.bdon.engine.Point
 import dev.bdon.engine.graphics.Graphics
-import java.awt.Graphics2D
 
 abstract class AbstractSprite : Sprite {
 
-    override var x: Int = 0
-    override var y: Int = 0
+    var x: Float = 0f
+    var y: Float = 0f
 
     @Suppress("MemberVisibilityCanBePrivate")
     var hidden: Boolean = false
@@ -15,7 +14,7 @@ abstract class AbstractSprite : Sprite {
     val position: Point
         get() = Point(x, y)
 
-    override fun move(x: Int, y: Int) {
+    override fun move(x: Float, y: Float) {
         this.x += x
         this.y += y
     }

@@ -6,8 +6,8 @@ import java.awt.Color
 
 class Box : AbstractSprite() {
 
-    var width: Int = 20
-    var height: Int = 20
+    var width: Float = 20f
+    var height: Float = 20f
     var fillColor: Color = Color.GREEN
     var strokeColor: Color = Color.GREEN
     var strokeWidth: Float = 1.0f

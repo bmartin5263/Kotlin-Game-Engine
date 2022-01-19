@@ -20,28 +20,20 @@ class AwtGraphics(private val graphics2D: Graphics2D) : Graphics {
         get() = graphics2D.stroke
         set(value) { graphics2D.stroke = value }
 
-    override fun drawRect(x: Int, y: Int, width: Int, height: Int) {
-        graphics2D.drawRect(x, y, width, height)
+    override fun drawRect(x: Float, y: Float, width: Float, height: Float) {
+        graphics2D.drawRect(x.toInt(), y.toInt(), width.toInt(), height.toInt())
     }
 
-    override fun fillRect(x: Int, y: Int, width: Int, height: Int) {
-        graphics2D.fillRect(x, y, width, height)
-    }
-
-    override fun drawString(string: String, x: Int, y: Int) {
-//        graphics2D.font = Font("Arial", 0, 30)
-        graphics2D.drawString(string, x, y)
+    override fun fillRect(x: Float, y: Float, width: Float, height: Float) {
+        graphics2D.fillRect(x.toInt(), y.toInt(), width.toInt(), height.toInt())
     }
 
     override fun drawString(string: String, x: Float, y: Float) {
-        graphics2D.drawString(string, x, y)
-    }
-
-    override fun drawString(iter: AttributedCharacterIterator, x: Int, y: Int) {
-        graphics2D.drawString(iter, x, y)
+//        graphics2D.font = Font("Arial", 0, 30)
+        graphics2D.drawString(string, x.toInt(), y.toInt())
     }
 
     override fun drawString(iter: AttributedCharacterIterator, x: Float, y: Float) {
-        graphics2D.drawString(iter, x, y)
+        graphics2D.drawString(iter, x.toInt(), y.toInt())
     }
 }

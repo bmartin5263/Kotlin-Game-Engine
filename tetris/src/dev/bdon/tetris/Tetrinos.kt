@@ -1,6 +1,6 @@
 package dev.bdon.tetris
 
-import com.bdon.tetris.Tetrino
+import dev.bdon.engine.IntPoint
 import dev.bdon.engine.Point
 import java.awt.Color
 import kotlin.random.Random
@@ -10,7 +10,7 @@ object Tetrinos {
         return RANDOM_LIST[Random.nextInt(RANDOM_LIST.size)]
     }
 
-    private fun point(x: Int, y: Int) = Point(x, y)
+    private fun point(x: Int, y: Int) = IntPoint(x, y)
     private val FUCHSIA = Color(153, 0, 255)
 
     val L0 = Tetrino(Color.ORANGE, arrayOf(point(0,0), point(0,-1), point(0,-2), point(1,-2)))

@@ -46,6 +46,13 @@ class EcsArray<T : HasId>(
         ++size
     }
 
+    fun isAlive(id: Id): Boolean {
+        val index = id.index
+        val generation = id.generation
+        val entity = array[index]
+        return entity != null && entity.id.generation == generation
+    }
+
     fun getByIndex(index: Int) = array[index]
 
     inline fun <reified R : T> getByType(): Array<R> {

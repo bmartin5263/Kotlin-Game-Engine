@@ -1,6 +1,5 @@
 package dev.bdon.tetris
 
-import com.bdon.tetris.Tetrino
 import kotlin.random.Random
 
 class TetrinoGenerator(private val random: Random) {

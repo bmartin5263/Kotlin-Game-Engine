@@ -1,7 +1,6 @@
 package dev.bdon.tetris
 
-import com.bdon.tetris.Tetrino
-import dev.bdon.engine.Point
+import dev.bdon.engine.IntPoint
 import java.awt.Color
 import java.util.*
 import kotlin.collections.ArrayList
@@ -22,7 +21,7 @@ class GameBoard(
         return board[index]
     }
 
-    fun place(tetrino: Tetrino, pos: Point) {
+    fun place(tetrino: Tetrino, pos: IntPoint) {
         tetrino.body.forEach {
             val x = pos.x + it.x
             val y = pos.y + it.y
@@ -30,7 +29,7 @@ class GameBoard(
         }
     }
 
-    fun canPlace(tetrino: Tetrino, pos: Point): Boolean {
+    fun canPlace(tetrino: Tetrino, pos: IntPoint): Boolean {
         tetrino.body.forEach {
             val y = pos.y + it.y
             val x = pos.x + it.x
@@ -41,7 +40,7 @@ class GameBoard(
         return true
     }
 
-    fun remove(tetrino: Tetrino, pos: Point) {
+    fun remove(tetrino: Tetrino, pos: IntPoint) {
         tetrino.body.forEach {
             val x = pos.x + it.x
             val y = pos.y + it.y
@@ -49,7 +48,7 @@ class GameBoard(
         }
     }
 
-    fun clearRows(tetrino: Tetrino, pos: Point) {
+    fun clearRows(tetrino: Tetrino, pos: IntPoint) {
         val rowsToClear: SortedSet<Int> = TreeSet()
         tetrino.body.forEach {
             val row = pos.y + it.y

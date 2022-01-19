@@ -1,14 +1,12 @@
-package com.bdon.tetris
+package dev.bdon.tetris
 
-import dev.bdon.engine.Point
-import dev.bdon.tetris.Tetrinos
+import dev.bdon.engine.IntPoint
 import java.awt.Color
-import kotlin.random.Random
 
 
 class Tetrino(
     val color: Color,
-    val body: Array<Point>
+    val body: Array<IntPoint>
 ) {
     fun rotate(): Tetrino = Tetrinos.RIGHT_ROTATIONS.getValue(this)
 }

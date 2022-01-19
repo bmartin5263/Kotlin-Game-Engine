@@ -1,13 +1,11 @@
 package dev.bdon.tetris
 
 
-import com.bdon.tetris.Tetrino
-import dev.bdon.engine.Clock
+import dev.bdon.engine.IntPoint
 import dev.bdon.engine.Point
 import dev.bdon.engine.entity.Entity
 import dev.bdon.engine.entity.interval
 import dev.bdon.engine.events.IntervalTimerHandle
-import dev.bdon.engine.events.TimerHandle
 import dev.bdon.engine.graphics.Graphics
 import kotlin.random.Random
 
@@ -22,7 +20,7 @@ class TetrisGame(
     private val blockGenerator: TetrinoGenerator = TetrinoGenerator(random)
 
     private val gameBoard: GameBoard = GameBoard(dimensions)
-    val ui: TetrisGameUI = TetrisGameUI(dimensions, pos, blockSize)
+//    val ui: TetrisGameUI = TetrisGameUI(dimensions, pos, blockSize)
 
     private val spawnCol = dimensions.col / 2 - 1
     private val spawnRow = dimensions.row - 1
@@ -43,14 +41,14 @@ class TetrisGame(
     }
 
     override fun draw(g: Graphics) {
-        ui.draw(g)
+//        ui(g)
     }
 
     private fun spawnNextBlock() {
         row = spawnRow
         col = spawnCol
         currentTetrino = blockGenerator.next()
-        ui.updateNextAndAfter(blockGenerator.peekNext(), blockGenerator.peekAfter())
+//        ui.updateNextAndAfter(blockGenerator.peekNext(), blockGenerator.peekAfter())
         place(currentTetrino)
     }
 
@@ -58,8 +56,8 @@ class TetrisGame(
         dropHandle?.reset()
         val success = attemptMove { --row }
         if (!success) {
-            gameBoard.clearRows(currentTetrino, Point(col, row))
-            ui.boxGrid.updateAll(gameBoard)
+            gameBoard.clearRows(currentTetrino, IntPoint(col, row))
+//            ui.boxGrid.updateAll(gameBoard)
             spawnNextBlock()
         }
     }
@@ -103,19 +101,19 @@ class TetrisGame(
         tetrino.body.forEach {
             val y = row + it.y
             val x = col + it.x
-            ui.boxGrid.grid[y][x].strokeColor = tetrino.color
+//            ui.boxGrid.grid[y][x].strokeColor = tetrino.color
         }
-        gameBoard.place(tetrino, Point(col, row))
-        ui.boxGrid.place(tetrino, Point(col, row))
+        gameBoard.place(tetrino, IntPoint(col, row))
+//        ui.boxGrid.place(tetrino, IntPoint(col, row))
     }
 
     private fun canPlace(tetrino: Tetrino): Boolean {
-        return gameBoard.canPlace(tetrino, Point(col, row))
+        return gameBoard.canPlace(tetrino, IntPoint(col, row))
     }
 
     private fun remove(tetrino: Tetrino) {
-        gameBoard.remove(tetrino, Point(col, row))
-        ui.boxGrid.remove(tetrino, Point(col, row))
+        gameBoard.remove(tetrino, IntPoint(col, row))
+//        ui.boxGrid.remove(tetrino, Point(col, row))
     }
 
     init {
