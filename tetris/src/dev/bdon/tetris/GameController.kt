@@ -7,7 +7,7 @@ import java.awt.event.KeyEvent
 
 class GameController : Entity() {
     var game: TetrisGame? = null
-    override fun initialize() {
+    override fun onSpawn() {
         whileKeyPressed(KeyEvent.VK_DOWN, 3) {
             game?.moveDown()
         }

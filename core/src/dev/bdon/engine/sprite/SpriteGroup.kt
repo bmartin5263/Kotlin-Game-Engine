@@ -7,14 +7,14 @@ abstract class SpriteGroup : Sprite {
     abstract val sprites: Iterable<Sprite>
 
     override var x: Int
-        get() = sprites.firstOrNull()?.x ?: 0
+        get() = sprites.minOf { it.x }
         set(value) {
             val delta = value.compareTo(y)
             move(delta, 0)
         }
 
     override var y: Int
-        get() = sprites.firstOrNull()?.y ?: 0
+        get() = sprites.minOf { it.y }
         set(value) {
             val delta = value.compareTo(y)
             move(0, delta)

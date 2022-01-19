@@ -3,9 +3,9 @@ package dev.bdon.engine.events
 open class TimerHandle {
 
     internal var isCancelled: Boolean = false
-    internal var timer: Timer? = null
+    internal var timer: TimerComponent? = null
 
-    internal fun link(timer: Timer) {
+    internal fun link(timer: TimerComponent) {
         this.timer = timer
     }
 

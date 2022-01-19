@@ -2,11 +2,10 @@ package dev.bdon.tetris
 
 import dev.bdon.engine.Clock
 import dev.bdon.engine.Point
-import dev.bdon.engine.entity.interval
-import dev.bdon.engine.entity.onKeyPress
-import dev.bdon.engine.entity.timeout
-import dev.bdon.engine.entity.whileKeyPressed
+import dev.bdon.engine.entity.*
+import dev.bdon.engine.graphics.Graphics
 import dev.bdon.engine.scene.Scene
+import dev.bdon.engine.sprite.Label
 import dev.bdon.engine.util.cycleIterator
 import java.awt.event.KeyEvent
 import kotlin.random.Random
@@ -38,6 +37,19 @@ class TwoPlayerScene : GameplayScene() {
         mainGame.whileKeyPressed(KeyEvent.VK_W) {
             ui.move(0, -2)
         }
+
+        val x = object : Entity() {
+            private val t = Label().apply {
+                size = 30
+            }
+            override fun draw(g: Graphics) {
+                val x = mainGame.ui.x.toString()
+                val y = mainGame.ui.y.toString()
+                t.text = "($x,$y)"
+                t.draw(g)
+            }
+        }
+        spawn(x)
     }
 
     override fun onEnter() {

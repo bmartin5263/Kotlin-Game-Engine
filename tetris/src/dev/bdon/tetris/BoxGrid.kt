@@ -12,6 +12,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.max
 
+// implement a position hierarchy
 class BoxGrid(
     title: String,
     pos: Point,

@@ -31,14 +31,14 @@ class TetrisGame(
     private var currentTetrino: Tetrino = Tetrinos.L0
     private var dropHandle: IntervalTimerHandle? = null
 
-    override fun initialize() {
+    override fun onSpawn() {
         println("TetrisGame::initialize()")
         dropHandle = interval(60) {
             moveDown()
         }
     }
 
-    override fun terminate() {
+    override fun onDestruction() {
         println("TetrisGame::terminate()")
     }
 

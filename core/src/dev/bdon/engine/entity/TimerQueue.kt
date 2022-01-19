@@ -1,11 +1,8 @@
 package dev.bdon.engine.entity
 
-import dev.bdon.engine.Clock
-import dev.bdon.engine.events.IntervalTimer
-import dev.bdon.engine.events.KeyListener
-import dev.bdon.engine.events.TimeoutTimer
-import dev.bdon.engine.events.Timer
-import dev.bdon.engine.scene.Scene
+import dev.bdon.engine.events.IntervalTimerComponent
+import dev.bdon.engine.events.TimeoutTimerComponent
+import dev.bdon.engine.events.TimerComponent
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -13,18 +10,18 @@ import kotlin.collections.HashSet
 
 class TimerQueue {
 
-    internal val queue: PriorityQueue<TimeoutTimer> = PriorityQueue()
-    internal val intervals: MutableList<IntervalTimer> = ArrayList()
+    internal val queue: PriorityQueue<TimeoutTimerComponent> = PriorityQueue()
+    internal val intervals: MutableList<IntervalTimerComponent> = ArrayList()
 
-    private val entityToTimers: MutableMap<Entity, MutableSet<Timer>> = HashMap()
-    private val addRequests: MutableSet<Timer> = HashSet()
-    private val removeRequests: MutableSet<Timer> = HashSet()
+    private val entityToTimers: MutableMap<Entity, MutableSet<TimerComponent>> = HashMap()
+    private val addRequests: MutableSet<TimerComponent> = HashSet()
+    private val removeRequests: MutableSet<TimerComponent> = HashSet()
 
-    fun add(timer: Timer) {
+    fun add(timer: TimerComponent) {
         addRequests += timer
     }
 
-    fun remove(timer: Timer) {
+    fun remove(timer: TimerComponent) {
         removeRequests += timer
     }
 
@@ -33,7 +30,7 @@ class TimerQueue {
         timers.forEach { it.removeFrom(this) }
     }
 
-    fun poll(): Timer {
+    fun poll(): TimerComponent {
         val timer = queue.poll()
         entityToTimers[timer.action.target]!!.remove(timer)
         return timer

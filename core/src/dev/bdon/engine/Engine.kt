@@ -1,36 +1,42 @@
 package dev.bdon.engine
 
-import dev.bdon.engine.entity.*
+import dev.bdon.engine.ecs.HasId
+import dev.bdon.engine.entity.Entity
 import dev.bdon.engine.events.Keyboard
 import dev.bdon.engine.graphics.Java2d
 import dev.bdon.engine.scene.EmptyScene
 import dev.bdon.engine.scene.Scene
+import dev.bdon.engine.util.EcsArray
+import dev.bdon.engine.util.IdGenerator
 import java.util.*
 
 object Engine {
 
     private val java2d = Java2d()
-
-    private val sceneStack: Deque<Scene> = LinkedList<Scene>().apply { add(EmptyScene) }
+    private val sceneStack: Deque<Scene> = LinkedList()
     private val sceneChangeQueue: Deque<Scene> = LinkedList()
     private val sceneRemovalQueue: Deque<Scene> = LinkedList()
 
-    private val currentScene get() = sceneStack.first!!
+    val currentScene get() = sceneStack.first!!
 
     fun launch(initialScene: Scene) {
+        sceneStack.push(EmptyScene)
         java2d.initialize()
         Keyboard.keySource = java2d.keySource
+
         requestSceneChange(initialScene)
 
-        Clock.start {
-            doSceneChangeRequests()
-            update()
-            draw()
-            doSceneRemovalRequests()
-        }
+        Clock.start(Engine::onTick)
     }
 
-    fun entities(): Set<Entity> {
+    private fun onTick() {
+        doSceneChangeRequests()
+        update()
+        draw()
+        doSceneRemovalRequests()
+    }
+
+    fun entities(): Iterator<Entity> {
         return currentScene.liveEntities
     }
 
@@ -95,5 +101,11 @@ object Engine {
         currentScene.onExit()
         currentScene.terminate()
         sceneStack.pop()
+    }
+
+    internal inline fun <reified T : HasId> createEcsArray(): EcsArray<T> {
+        @Suppress("USELESS_CAST") val array = Array(Config.maxEntities) { null as T? }
+        val idGenerator = IdGenerator(Config.maxEntities)
+        return EcsArray(array, idGenerator)
     }
 }

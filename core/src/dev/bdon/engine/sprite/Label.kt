@@ -28,6 +28,12 @@ class Label : AbstractSprite() {
             font = font.deriveFont(applyStyle(font.style, Font.ITALIC, value))
         }
 
+    var size: Int
+        get() = font.size
+        set(value) {
+            font = Font(font.name, font.style, value)
+        }
+
     private fun applyStyle(style: Int, flag: Int, value: Boolean): Int {
         return if (value) {
             style.or(flag)
@@ -39,6 +45,6 @@ class Label : AbstractSprite() {
     override fun render(g: Graphics) {
         g.color = color
         g.font = font
-        g.drawString(text, x, y)
+        g.drawString(text, x, y + font.size)
     }
 }

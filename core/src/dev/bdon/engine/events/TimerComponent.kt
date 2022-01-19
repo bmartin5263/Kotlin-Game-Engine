@@ -3,13 +3,13 @@ package dev.bdon.engine.events
 import dev.bdon.engine.entity.Entity
 import dev.bdon.engine.entity.TimerQueue
 
-abstract class Timer(
+abstract class TimerComponent(
     val handle: TimerHandle,
-    val action: Action1<Entity, out Timer>
+    val action: Action1<Entity, out TimerComponent>
 ) {
 
     fun execute() {
-        val casted = action as Action1<Entity, Timer>
+        val casted = action as Action1<Entity, TimerComponent>
         casted(this)
     }
 

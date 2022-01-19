@@ -2,9 +2,7 @@
 
 package dev.bdon.engine.events
 
-import dev.bdon.engine.entity.Entity
 import dev.bdon.engine.scene.Scene
-import java.util.concurrent.ConcurrentHashMap
 
 object Keyboard {
 
@@ -19,5 +17,14 @@ object Keyboard {
 
     fun recordKeys() {
         keyHistory += pressed.toIntArray()
+    }
+
+    fun update(scene: Scene) {
+        val keyMap = scene.keyMap
+        keyMap.doAddRequests()
+        for (code in pressed) {
+            keyMap.updateListeners(code)
+        }
+        keyMap.doRemoveRequests()
     }
 }

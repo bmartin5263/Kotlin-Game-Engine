@@ -46,18 +46,16 @@ class KeyMap {
         }
     }
 
-    fun startNewListeners() {
+    fun doAddRequests() {
         addRequests.forEach { listener ->
-//            println("Registering $listener")
             codeToListeners.getOrPut(listener.key) { ArrayList() }.add(listener)
             entityToListeners.getOrPut(listener.action.target) { ArrayList() }.add(listener)
         }
         addRequests.clear()
     }
 
-    fun removeExpiredListeners() {
+    fun doRemoveRequests() {
         removeRequests.forEach { listener ->
-//            println("Deregistering $listener")
             val entity = listener.action.target
             codeToListeners.remove(listener.key)
             assert(entityToListeners[entity]!!.remove(listener))
@@ -66,11 +64,4 @@ class KeyMap {
         removeRequests.clear()
     }
 
-//    operator fun get(key: Int): MutableList<KeyListener> {
-//        return codeToListeners.getOrDefault(key, Collections.emptyList())
-//    }
-//
-//    operator fun get(entity: Entity): MutableList<KeyListener> {
-//        return entityToListeners.getOrDefault(entity, Collections.emptyList())
-//    }
 }

@@ -1,39 +1,49 @@
 package dev.bdon.engine.entity
 
 import dev.bdon.engine.Clock
+import dev.bdon.engine.Engine
+import dev.bdon.engine.ecs.HasId
+import dev.bdon.engine.ecs.Id
+import dev.bdon.engine.ecs.emptyId
 import dev.bdon.engine.events.*
-import dev.bdon.engine.events.Timer
+import dev.bdon.engine.events.TimerComponent
 import dev.bdon.engine.graphics.Graphics
 import dev.bdon.engine.scene.Scene
 import java.util.*
 
-abstract class Entity {
+abstract class Entity : HasId {
 
+    override var id: Id = emptyId()
     internal var scene: Scene? = null
-    internal val registerCommandQueue: Deque<RegisterCommand> = ArrayDeque()
+    private val registerCommandQueue: Deque<RegisterCommand> = ArrayDeque()
 
     open fun draw(g: Graphics) {}
     open fun update() {}
-    open fun initialize() {}
-    open fun terminate() {}
+    open fun onSpawn() {}
+    open fun onDestruction() {}
 
-    fun markForDestruction() {
-        scene!!.markForDestruction(this)
+    fun spawn() {
+        Engine.currentScene.spawn(this)
     }
 
-    internal fun registerToScene(scene: Scene) {
+    fun markForDestruction() {
+        scene!!.markForDestruction(id)
+    }
+
+    internal fun addSceneData(scene: Scene) {
         this.scene = scene
         while (registerCommandQueue.isNotEmpty()) {
             registerCommandQueue.poll().execute(scene)
         }
     }
 
-    internal fun deregisterFromScene() {
+    internal fun removeSceneData() {
         this.scene = null
+        this.id = emptyId()
         this.registerCommandQueue.clear()
     }
 
-    internal fun register(registerCommand: RegisterCommand) {
+    internal fun addRegisterCommand(registerCommand: RegisterCommand) {
         if (scene != null) {
             registerCommand.execute(scene!!)
         }
@@ -43,31 +53,31 @@ abstract class Entity {
     }
 }
 
-fun <T : Entity> T.timeout(frames: Long, method: T.(Timer) -> Unit): TimerHandle {
+fun <T : Entity> T.timeout(frames: Long, method: T.(TimerComponent) -> Unit): TimerHandle {
     val handle = TimerHandle()
     val command = object : RegisterCommand {
         override fun execute(scene: Scene) {
             if (!handle.isCancelled) {
                 require(scene == this@timeout.scene)
                 val action = Action1(this@timeout, method)
-                val timer = TimeoutTimer(handle, Clock.time + frames, action as Action1<Entity, TimeoutTimer>)
+                val timer = TimeoutTimerComponent(handle, Clock.time + frames, action as Action1<Entity, TimeoutTimerComponent>)
                 scene.startTimer(timer)
                 handle.link(timer)
             }
         }
     }
-    register(command)
+    addRegisterCommand(command)
     return handle
 }
 
-fun <T : Entity> T.interval(frames: Long, callImmediately: Boolean = false, method: T.(IntervalTimer) -> Unit): IntervalTimerHandle {
+fun <T : Entity> T.interval(frames: Long, callImmediately: Boolean = false, method: T.(IntervalTimerComponent) -> Unit): IntervalTimerHandle {
     val handle = IntervalTimerHandle()
     val command = object : RegisterCommand {
         override fun execute(scene: Scene) {
             if (!handle.isCancelled) {
                 require(scene == this@interval.scene)
                 val action = Action1(this@interval, method)
-                val timer = IntervalTimer(handle, frames, action as Action1<Entity, IntervalTimer>)
+                val timer = IntervalTimerComponent(handle, frames, action as Action1<Entity, IntervalTimerComponent>)
                 if (callImmediately) {
                     timer.remaining = 0
                 }
@@ -76,7 +86,7 @@ fun <T : Entity> T.interval(frames: Long, callImmediately: Boolean = false, meth
             }
         }
     }
-    register(command)
+    addRegisterCommand(command)
     return handle
 }
 
@@ -93,7 +103,7 @@ fun <T : Entity> T.onKeyPress(key: Int, method: T.() -> Unit): KeyHandle {
             }
         }
     }
-    register(command)
+    addRegisterCommand(command)
     return handle
 }
 
@@ -110,6 +120,6 @@ fun <T : Entity> T.whileKeyPressed(key: Int, delay: Long = 0, method: T.() -> Un
             }
         }
     }
-    register(command)
+    addRegisterCommand(command)
     return handle
 }

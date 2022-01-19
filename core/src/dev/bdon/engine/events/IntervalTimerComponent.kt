@@ -3,11 +3,11 @@ package dev.bdon.engine.events
 import dev.bdon.engine.entity.Entity
 import dev.bdon.engine.entity.TimerQueue
 
-class IntervalTimer(
+class IntervalTimerComponent(
     handle: TimerHandle,
     internal var interval: Long,
-    action: Action1<Entity, IntervalTimer>
-): Timer(handle, action) {
+    action: Action1<Entity, IntervalTimerComponent>
+): TimerComponent(handle, action) {
 
     var remaining: Long = interval
         internal set

@@ -1,6 +1,6 @@
 package dev.bdon.engine.util
 
-class LinkedList<T> {
+class MyLinkedList<T> {
 
     var head: Node<T>? = null
     var tail: Node<T>? = null
